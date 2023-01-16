@@ -7,42 +7,21 @@ class LineChart {
      * @param {string} htmlId
      * @param {string} valueField
      * @param {string} labelField
-     * @param {string} tooltipTitleField
-     * @param {string} tooltipLabelField
+     * @param {function} tooltipTitleCallback
+     * @param {function} tooltipLabelCallback
      */
-    constructor(data, htmlId, valueField, labelField, tooltipTitleField, tooltipLabelField) {
+    constructor(data, htmlId, valueField, labelField, tooltipTitleCallback, tooltipLabelCallback) {
         this._data = data;
         this._htmlId = htmlId;
         this._valueField = valueField;
         this._labelField = labelField;
-        this._tooltipTitleField = tooltipTitleField;
-        this._tooltipLabelField = tooltipLabelField;
+        this._tooltipTitleCallback = tooltipTitleCallback;
+        this._tooltipLabelCallback = tooltipLabelCallback;
         this._colors = new Colors();
 
         let labels = this.createLabels();
         let normalizedData = this.normalizeData();
         this.createChart(normalizedData, labels);
-    }
-
-    /**
-     * @param {[]} charts
-     * @return {string}
-     */
-    titleCallback(charts) {
-        let firstChart = charts[0];
-        let index = firstChart.dataIndex;
-        return Object.values(this._data)[0][index][this._tooltipTitleField];
-    };
-
-    /**
-     * @param {Object} chart
-     * @return {string}
-     */
-    labelCallback(chart) {
-        console.log(chart);
-        let label = chart.dataset.label;
-        let index = chart.dataIndex;
-        return this._data[label][index][this._tooltipLabelField];
     }
 
     /**
@@ -104,8 +83,8 @@ class LineChart {
                     tooltip: {
                         displayColors: false,
                         callbacks: {
-                            title: this.titleCallback,
-                            label: this.labelCallback,
+                            title: this._tooltipTitleCallback,
+                            label: this._tooltipLabelCallback,
                         },
                     },
                 },
