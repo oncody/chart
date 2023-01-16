@@ -1,23 +1,99 @@
 import { Chart as ChartJS, ArcElement, Tooltip, LinearScale } from 'chart.js';
+import {Colors} from "./colors.js"
 
 class LineChart {
     /**
-     *
+     * @param {{}} data - keys are stock name. value is array of data
      * @param {string} htmlId
+     * @param {string} valueField
+     * @param {string} labelField
+     * @param {string} tooltipTitleField
+     * @param {string} tooltipLabelField
+     */
+    constructor(data, htmlId, valueField, labelField, tooltipTitleField, tooltipLabelField) {
+        this._data = data;
+        this._htmlId = htmlId;
+        this._valueField = valueField;
+        this._labelField = labelField;
+        this._tooltipTitleField = tooltipTitleField;
+        this._tooltipLabelField = tooltipLabelField;
+        this._colors = new Colors();
+
+        let labels = this.createLabels();
+        let normalizedData = this.normalizeData();
+        this.createChart(normalizedData, labels);
+    }
+
+    /**
+     * @param {[]} charts
+     * @return {string}
+     */
+    titleCallback(charts) {
+        let firstChart = charts[0];
+        let index = firstChart.dataIndex;
+        return Object.values(this._data)[0][index][this._tooltipTitleField];
+    };
+
+    /**
+     * @param {Object} chart
+     * @return {string}
+     */
+    labelCallback(chart) {
+        console.log(chart);
+        let label = chart.dataset.label;
+        let index = chart.dataIndex;
+        return this._data[label][index][this._tooltipLabelField];
+    }
+
+    /**
+     * @return {[]}
+     */
+    createLabels() {
+        let yearsPrinted = [];
+
+        return Object.values(this._data)[0].map(record => {
+            if(yearsPrinted.includes(record[this._labelField])) {
+                return '';
+            }
+            yearsPrinted.push(record[this._labelField]);
+            return record.year;
+        });
+    }
+
+    /**
+     * @return {[]}
+     */
+    normalizeData() {
+        return Object.entries(this._data).map(entry => {
+            let stock = entry[0];
+            let data = entry[1];
+            let color = this._colors.randomColor();
+            return {
+                label: stock,
+                data: data.map(record => record[this._valueField]),
+                lineTension: 0.8,
+                tension: 0.8,
+                pointRadius: 0,
+                borderWidth: 1,
+                cubicInterpolationMode: 'monotone',
+                backgroundColor: color,
+                borderColor: color,
+            };
+        });
+    }
+
+    /**
      * @param {[]} data
      * @param {[]} labels
-     * @param {function} titleCallback
-     * @param {function} labelCallback
      */
-    constructor(htmlId, data, labels, titleCallback, labelCallback) {
+    createChart(data, labels) {
         ChartJS.register(ArcElement, Tooltip, LinearScale);
-
         Chart.Tooltip.positioners.cursor = function(chartElements, coordinates) {
             return coordinates;
         };
 
-        const ctx = document.getElementById(htmlId);
-        new Chart(ctx, {
+        const htmlElement = document.getElementById(this._htmlId);
+        new Chart(htmlElement, {
             type: 'line',
             data: {
                 datasets: data,
@@ -28,8 +104,8 @@ class LineChart {
                     tooltip: {
                         displayColors: false,
                         callbacks: {
-                            title: titleCallback,
-                            label: labelCallback,
+                            title: this.titleCallback,
+                            label: this.labelCallback,
                         },
                     },
                 },
