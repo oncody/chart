@@ -1,0 +1,24 @@
+{
+  "name": "@oncody/chart",
+  "version": "1.0.2",
+  "description": "js chart",
+  "main": "index.js",
+  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/oncody/chart.git"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "chart.js": "4.1.2"
+  },
+  "keywords": [],
+  "author": "Cody Smith",
+  "license": "MIT",
+  "homepage": "https://github.com/oncody/chart#readme"
+}
