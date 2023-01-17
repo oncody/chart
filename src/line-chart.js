@@ -7,16 +7,16 @@ class LineChart {
      * @param {string} htmlId
      * @param {string} valueField
      * @param {string} labelField
-     * @param {function} tooltipTitleCallback
-     * @param {function} tooltipLabelCallback
+     * @param {string} tooltipTitleField
+     * @param {string} tooltipLabelField
      */
-    constructor(data, htmlId, valueField, labelField, tooltipTitleCallback, tooltipLabelCallback) {
+    constructor(data, htmlId, valueField, labelField, tooltipTitleField, tooltipLabelField) {
         this._data = data;
         this._htmlId = htmlId;
         this._valueField = valueField;
         this._labelField = labelField;
-        this._tooltipTitleCallback = tooltipTitleCallback;
-        this._tooltipLabelCallback = tooltipLabelCallback;
+        this._tooltipTitleField = tooltipTitleField;
+        this._tooltipLabelField = tooltipLabelField;
         this._colors = new Colors();
 
         let labels = this.createLabels();
@@ -71,6 +71,26 @@ class LineChart {
             return coordinates;
         };
 
+        /**
+         * @param {[]} charts
+         * @return {string}
+         */
+        let tooltipTitleCallback = (charts) => {
+            let firstChart = charts[0];
+            let index = firstChart.dataIndex;
+            return Object.values(this._data)[0][index][this._tooltipTitleField];
+        };
+
+        /**
+         * @param {Object} chart
+         * @return {string}
+         */
+        let tooltipLabelCallback = (chart) => {
+            let label = chart.dataset.label;
+            let index = chart.dataIndex;
+            return this._data[label][index][this._tooltipLabelField];
+        }
+
         const htmlElement = document.getElementById(this._htmlId);
         new Chart(htmlElement, {
             type: 'line',
@@ -83,8 +103,8 @@ class LineChart {
                     tooltip: {
                         displayColors: false,
                         callbacks: {
-                            title: this._tooltipTitleCallback,
-                            label: this._tooltipLabelCallback,
+                            title: tooltipTitleCallback,
+                            label: tooltipLabelCallback,
                         },
                     },
                 },
