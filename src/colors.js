@@ -25,11 +25,25 @@ class Colors {
         this._unusedColors = COLORS;
     }
 
+    nextColor() {
+        if(!this._unusedColors.length) {
+            this._unusedColors = this._allColors;
+        }
+
+        let color = this._unusedColors[0];
+        this._unusedColors.splice(0, 1);
+        return color;
+    }
+
     /**
      *
      * @returns {string}
      */
     randomColor() {
+        if(!this._unusedColors.length) {
+            this._unusedColors = this._allColors;
+        }
+
         let index = Numbers.randomIntegerExclusive(0, this._unusedColors.length);
         let color = this._unusedColors[index];
         this._unusedColors.splice(index, 1);

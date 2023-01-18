@@ -1,55 +1,49 @@
 import { Chart as ChartJS, ArcElement, Tooltip, LinearScale } from 'chart.js';
 import {Colors} from "./colors.js"
 
-class LineChart {
+class Timeline {
     /**
-     * @param {{}} data - keys are stock name. value is array of data
+     * The x-axis is meant to be time
      * @param {string} htmlId
-     * @param {string} valueField
-     * @param {string} labelField
-     * @param {string} tooltipTitleField
-     * @param {string} tooltipLabelField
+     * @param {TimelineDataSet[]} timelineDataSets
      */
-    constructor(data, htmlId, valueField, labelField, tooltipTitleField, tooltipLabelField) {
-        this._data = data;
+    constructor(htmlId, timelineDataSets) {
         this._htmlId = htmlId;
-        this._valueField = valueField;
-        this._labelField = labelField;
-        this._tooltipTitleField = tooltipTitleField;
-        this._tooltipLabelField = tooltipLabelField;
+        this._dataSets = timelineDataSets;
         this._colors = new Colors();
 
-        let labels = this.createLabels();
-        let normalizedData = this.normalizeData();
-        this.createChart(normalizedData, labels);
+        let labels = this.createXAxisYearLabels();
+        let chartDataSets = this.createChartDataSets();
+        this.createChart(chartDataSets, labels);
     }
 
     /**
-     * @return {[]}
+     * Create the x axis year labels
+     * @return {string []}
      */
-    createLabels() {
+    createXAxisYearLabels() {
         let yearsPrinted = [];
 
-        return Object.values(this._data)[0].map(record => {
-            if(yearsPrinted.includes(record[this._labelField])) {
+        return this._dataSets[0].dataPoints().map(dataPoint => {
+            let year = dataPoint.date().year();
+            if(yearsPrinted.includes(year)) {
                 return '';
             }
-            yearsPrinted.push(record[this._labelField]);
-            return record.year;
+
+            yearsPrinted.push(year);
+            return year;
         });
     }
 
     /**
      * @return {[]}
      */
-    normalizeData() {
-        return Object.entries(this._data).map(entry => {
-            let stock = entry[0];
-            let data = entry[1];
-            let color = this._colors.randomColor();
+    createChartDataSets() {
+        return this._dataSets.map(dataSet => {
+            let color = this._colors.nextColor();
             return {
-                label: stock,
-                data: data.map(record => record[this._valueField]),
+                label: dataSet.name(),
+                data: dataSet.dataPoints().map(dataPoint => dataPoint.value()),
                 lineTension: 0.8,
                 tension: 0.8,
                 pointRadius: 0,
@@ -78,7 +72,7 @@ class LineChart {
         let tooltipTitleCallback = (charts) => {
             let firstChart = charts[0];
             let index = firstChart.dataIndex;
-            return Object.values(this._data)[0][index][this._tooltipTitleField];
+            return this._dataSets[0].dataPoints()[index].date().friendlyHumanUnitedStatesToString();
         };
 
         /**
@@ -88,7 +82,7 @@ class LineChart {
         let tooltipLabelCallback = (chart) => {
             let label = chart.dataset.label;
             let index = chart.dataIndex;
-            return this._data[label][index][this._tooltipLabelField];
+            return this._dataSets.filter(dataSet => dataSet.name() === label)[0].dataPoints()[index].tooltip();
         }
 
         const htmlElement = document.getElementById(this._htmlId);
@@ -147,4 +141,4 @@ class LineChart {
     }
 }
 
-export {LineChart}
+export {Timeline}
