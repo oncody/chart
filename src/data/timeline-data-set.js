@@ -8,7 +8,7 @@ class TimelineDataSet {
         this._name = name;
         this._dataPoints = dataPoints
             .filter(dataPoint => dataPoint.date().year() > 2018)
-            .sort((a, b) => a.date() - b.date());
+            .sort((a, b) => a.date().unix() - b.date().unix());
     }
 
     /**
