@@ -1,6 +1,6 @@
 {
   "name": "@oncody/chart",
-  "version": "1.0.16",
+  "version": "1.0.17",
   "description": "js chart",
   "main": "index.js",
   "type": "module",
@@ -15,7 +15,7 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
-    "@oncody/objects": "1.0.7",
+    "@oncody/objects": "1.0.8",
     "chart.js": "4.1.2"
   },
   "keywords": [],
