@@ -1,6 +1,6 @@
 {
   "name": "@oncody/chart",
-  "version": "1.0.17",
+  "version": "1.0.19",
   "description": "js chart",
   "main": "index.js",
   "type": "module",
@@ -12,10 +12,11 @@
     "registry": "https://npm.pkg.github.com"
   },
   "scripts": {
+    "clean": "rm -rf node_modules",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
-    "@oncody/objects": "1.0.8",
+    "@oncody/objects": "1.0.13",
     "chart.js": "4.1.2"
   },
   "keywords": [],

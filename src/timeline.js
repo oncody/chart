@@ -72,7 +72,7 @@ class Timeline {
         let tooltipTitleCallback = (charts) => {
             let firstChart = charts[0];
             let index = firstChart.dataIndex;
-            return this._dataSets[0].dataPoints()[index].date().friendlyHumanUnitedStatesToString();
+            return this._dataSets[0].dataPoints()[index].date().longHumanString();
         };
 
         /**
