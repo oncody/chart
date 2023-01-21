@@ -1,4 +1,4 @@
-import {Numbers} from "@oncody/objects";
+import {Arrays, Numbers} from "@oncody/objects";
 
 const COLORS = [
     '#f37735',
@@ -8,24 +8,24 @@ const COLORS = [
     '#B10DC9',
     '#8860D0',
     '#ff1d58',
-    '#fc4a1a',
-    '#ff3377',
-    '#ff5588',
-    '#F012BE',
-    '#f75990',
-    '#FF007f',
+    // '#fc4a1a',
+    // '#ff3377',
+    // '#ff5588',
+    // '#F012BE',
+    // '#f75990',
+    // '#FF007f',
 ];
 
 class Colors {
     constructor() {
         /** @private */ this._allColors = COLORS;
-        /** @private */ this._unusedColors = COLORS;
+        /** @private */ this._unusedColors = Arrays.clone(COLORS);
     }
 
     /** @returns {string} */
     nextColor = () => {
         if(!this._unusedColors.length) {
-            this._unusedColors = this._allColors;
+            this._unusedColors = Arrays.clone(this._allColors);
         }
 
         let color = this._unusedColors[0];
@@ -36,7 +36,7 @@ class Colors {
     /** @returns {string} */
     randomColor = () => {
         if(!this._unusedColors.length) {
-            this._unusedColors = this._allColors;
+            this._unusedColors = Arrays.clone(this._allColors);
         }
 
         let index = Numbers.randomIntegerExclusive(0, this._unusedColors.length);
