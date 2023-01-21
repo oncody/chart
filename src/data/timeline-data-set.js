@@ -17,12 +17,7 @@ class TimelineDataSet {
      * @param {TimelineDataPoint[]} dataPoints
      * @returns {TimelineDataPoint[]} */
     static _normalizeData = dataPoints => {
-        let normalizedPoints = dataPoints
-            .filter(dataPoint => dataPoint.date().year() >= STARTING_YEAR)
-            .sort((a, b) => a.date().differenceInDays(b.date()));
-
-        // let max = Arrays.max(normalizedPoints.map(dataPoint => dataPoint.value()));
-        // normalizedPoints = normalizedPoints.map(dataPoint => new TimelineDataPoint(dataPoint.date(), ((dataPoint.value() * 1.0) / max)));
+        let sortedPoints = dataPoints.sort((a, b) => a.date().differenceInDays(b.date()));
 
         /** @type {CalendarDate[]} */
         let allDates = [];
@@ -34,15 +29,26 @@ class TimelineDataSet {
 
         /** @type {TimelineDataPoint[]} */
         let completeTimelineDataPoints = [];
-        let cursor = 0;
         let lastValue = 0.0;
+
+        let cursor = 0;
+        for(let dataPoint of sortedPoints) {
+            if(dataPoint.date().differenceInDays(startDate) < 0) {
+                lastValue = dataPoint.value();
+                cursor++;
+                continue;
+            }
+
+            break;
+        }
+
         for(let date of allDates) {
-            if(cursor >= normalizedPoints.length) {
+            if(cursor >= sortedPoints.length) {
                 completeTimelineDataPoints.push(new TimelineDataPoint(date, lastValue));
                 continue;
             }
 
-            let existingDataPoint = normalizedPoints[cursor];
+            let existingDataPoint = sortedPoints[cursor];
             if(date.differenceInDays(existingDataPoint.date()) < 0) {
                 completeTimelineDataPoints.push(new TimelineDataPoint(date, lastValue));
                 continue;
@@ -54,7 +60,14 @@ class TimelineDataSet {
                 cursor++;
                 continue;
             }
+
+            if(date.differenceInDays(existingDataPoint.date()) > 0) {
+                completeTimelineDataPoints.push(new TimelineDataPoint(date, lastValue));
+                continue;
+            }
         }
+
+        console.log(completeTimelineDataPoints);
 
         return completeTimelineDataPoints;
     }
