@@ -1,5 +1,6 @@
 import { Chart as ChartJS, ArcElement, Tooltip, LinearScale } from 'chart.js';
 import {Colors} from "./colors.js"
+import {Numbers} from "@oncody/objects";
 
 class Timeline {
     /** The x-axis is meant to be time
@@ -42,8 +43,7 @@ class Timeline {
                 borderWidth: 1,
                 backgroundColor: color,
                 borderColor: color,
-                // lineTension: 0.8,
-                // tension: 0.8,
+                // tension: 0.4,
                 // cubicInterpolationMode: 'monotone',
             };
         });
@@ -60,9 +60,27 @@ class Timeline {
         /** @param {[]} charts
          * @return {string} */
         let tooltipTitleCallback = (charts) => {
+            if(!charts || !charts.length) {
+                return '';
+            }
+
             let firstChart = charts[0];
+            if(!firstChart) {
+                return '';
+            }
+
             let index = firstChart.dataIndex;
-            return this._dataSets[0].dataPoints()[index].date().longHumanString();
+            if(!this._dataSets || !this._dataSets.length) {
+                return '';
+            }
+
+            let dataSet = this._dataSets[0];
+            let dataPoint = dataSet.dataPoint(index);
+            if(!dataPoint) {
+                return '';
+            }
+
+            return dataPoint.date().longHumanString();
         };
 
         /** @param {Object} chart
@@ -70,7 +88,12 @@ class Timeline {
         let tooltipLabelCallback = (chart) => {
             let label = chart.dataset.label;
             let index = chart.dataIndex;
-            return this._dataSets.filter(dataSet => dataSet.name() === label)[0].dataPoints()[index].tooltip();
+            let dataSet = this._dataSets.find(dataSet => dataSet.name() === label);
+            let dataPoint = dataSet.dataPoint(index);
+            let name = dataSet.name();
+            let valuePercent = Numbers.roundFloat(dataSet.valuePercent(dataPoint.value()), 2);
+            let value = Numbers.roundFloat(dataPoint.value(), 2);
+            return `${name}:   ${valuePercent}%    $${value}`
         }
 
         const htmlElement = document.getElementById(this._htmlId);

@@ -1,19 +1,55 @@
+import {Arrays, DateCreator, Month} from "@oncody/objects";
+import {TimelineDataPoint} from "./timeline-data-point.js";
+
+const STARTING_YEAR = 2018;
+
 class TimelineDataSet {
     /** @param {string} name
      * @param {TimelineDataPoint[]} dataPoints
      * @returns {TimelineDataSet} */
     constructor(name, dataPoints) {
         /** @private */ this._name = name;
-        /** @private */ this._dataPoints = dataPoints
-            .filter(dataPoint => dataPoint.date().year() > 2018)
-            .sort((a, b) => a.date().differenceInDays(b.date()));
+        /** @private */ this._dataPoints = TimelineDataSet._normalizeData(dataPoints);
+        /** @private */ this._max = Arrays.max(this._dataPoints.map(dataPoint => dataPoint.value()));
     }
+
+    /** @private
+     * @param {TimelineDataPoint[]} dataPoints
+     * @returns {TimelineDataPoint[]} */
+    static _normalizeData = dataPoints => {
+        let normalizedPoints = dataPoints
+            .filter(dataPoint => dataPoint.date().year() >= STARTING_YEAR)
+            .sort((a, b) => a.date().differenceInDays(b.date()));
+
+        let max = Arrays.max(normalizedPoints.map(dataPoint => dataPoint.value()));
+        normalizedPoints = normalizedPoints.map(dataPoint => new TimelineDataPoint(dataPoint.date(), ((dataPoint.value() * 1.0) / max)));
+
+        // let startingDate = DateCreator.date(Month.JANUARY, 1, STARTING_YEAR);
+        // let endDate = DateCreator.now();
+        // let dateCursor = startingDate;
+        // let lastValue = 0;
+        // let lastTooltip = '';
+        // while (dateCursor.differenceInDays(endDate) <= 0) {
+
+        // }
+        return normalizedPoints;
+    }
+
+    /** @param {number} value
+     * @returns {number} */
+    valuePercent = value => value > 0 ? ((value * 1.0) / this._max) : 0;
+
+    /** @returns {number} */
+    max = () => this._max;
 
     /** @returns {string} */
     name = () => this._name;
 
     /** @returns {TimelineDataPoint[]} */
     dataPoints = () => this._dataPoints;
+
+    /** @returns {TimelineDataPoint} */
+    dataPoint = position => this._dataPoints[position];
 }
 
 export {TimelineDataSet}
