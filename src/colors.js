@@ -17,15 +17,13 @@ const COLORS = [
 ];
 
 class Colors {
-    /**
-     * @returns {Colors}
-     */
     constructor() {
-        this._allColors = COLORS;
-        this._unusedColors = COLORS;
+        /** @private */ this._allColors = COLORS;
+        /** @private */ this._unusedColors = COLORS;
     }
 
-    nextColor() {
+    /** @returns {string} */
+    nextColor = () => {
         if(!this._unusedColors.length) {
             this._unusedColors = this._allColors;
         }
@@ -35,11 +33,8 @@ class Colors {
         return color;
     }
 
-    /**
-     *
-     * @returns {string}
-     */
-    randomColor() {
+    /** @returns {string} */
+    randomColor = () => {
         if(!this._unusedColors.length) {
             this._unusedColors = this._allColors;
         }

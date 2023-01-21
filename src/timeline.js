@@ -2,26 +2,22 @@ import { Chart as ChartJS, ArcElement, Tooltip, LinearScale } from 'chart.js';
 import {Colors} from "./colors.js"
 
 class Timeline {
-    /**
-     * The x-axis is meant to be time
+    /** The x-axis is meant to be time
      * @param {string} htmlId
-     * @param {TimelineDataSet[]} timelineDataSets
-     */
+     * @param {TimelineDataSet[]} timelineDataSets */
     constructor(htmlId, timelineDataSets) {
-        this._htmlId = htmlId;
-        this._dataSets = timelineDataSets;
-        this._colors = new Colors();
+        /** @private */ this._htmlId = htmlId;
+        /** @private */ this._dataSets = timelineDataSets;
+        /** @private */ this._colors = new Colors();
 
         let labels = this.createXAxisYearLabels();
         let chartDataSets = this.createChartDataSets();
         this.createChart(chartDataSets, labels);
     }
 
-    /**
-     * Create the x axis year labels
-     * @return {string []}
-     */
-    createXAxisYearLabels() {
+    /** Create the X axis year labels
+     * @return {string []} */
+    createXAxisYearLabels = () => {
         let yearsPrinted = [];
 
         return this._dataSets[0].dataPoints().map(dataPoint => {
@@ -35,10 +31,8 @@ class Timeline {
         });
     }
 
-    /**
-     * @return {[]}
-     */
-    createChartDataSets() {
+    /** @return {[]} */
+    createChartDataSets = () => {
         return this._dataSets.map(dataSet => {
             let color = this._colors.nextColor();
             return {
@@ -55,30 +49,24 @@ class Timeline {
         });
     }
 
-    /**
-     * @param {[]} data
-     * @param {[]} labels
-     */
-    createChart(data, labels) {
+    /** @param {[]} data
+     * @param {[]} labels */
+    createChart = (data, labels) => {
         ChartJS.register(ArcElement, Tooltip, LinearScale);
         Chart.Tooltip.positioners.cursor = function(chartElements, coordinates) {
             return coordinates;
         };
 
-        /**
-         * @param {[]} charts
-         * @return {string}
-         */
+        /** @param {[]} charts
+         * @return {string} */
         let tooltipTitleCallback = (charts) => {
             let firstChart = charts[0];
             let index = firstChart.dataIndex;
             return this._dataSets[0].dataPoints()[index].date().longHumanString();
         };
 
-        /**
-         * @param {Object} chart
-         * @return {string}
-         */
+        /** @param {Object} chart
+         * @return {string} */
         let tooltipLabelCallback = (chart) => {
             let label = chart.dataset.label;
             let index = chart.dataIndex;

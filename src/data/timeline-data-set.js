@@ -3,21 +3,17 @@ class TimelineDataSet {
      * @param {TimelineDataPoint[]} dataPoints
      * @returns {TimelineDataSet} */
     constructor(name, dataPoints) {
-        this._name = name;
-        this._dataPoints = dataPoints
+        /** @private */ this._name = name;
+        /** @private */ this._dataPoints = dataPoints
             .filter(dataPoint => dataPoint.date().year() > 2018)
-            .sort((a, b) => a.date().minus(b.date()));
+            .sort((a, b) => a.date().differenceInDays(b.date()));
     }
 
     /** @returns {string} */
-    name() {
-        return this._name;
-    }
+    name = () => this._name;
 
     /** @returns {TimelineDataPoint[]} */
-    dataPoints() {
-        return this._dataPoints;
-    }
+    dataPoints = () => this._dataPoints;
 }
 
 export {TimelineDataSet}

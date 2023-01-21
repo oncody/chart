@@ -6,25 +6,19 @@ class TimelineDataPoint {
      * @param {string} tooltip
      * @returns {TimelineDataPoint} */
     constructor(date, value, tooltip) {
-        this._date = date;
-        this._value = value;
-        this._tooltip = tooltip;
+        /** @private */ this._date = date;
+        /** @private */ this._value = value;
+        /** @private */ this._tooltip = tooltip;
     }
 
     /** @returns {CalendarDate} */
-    date() {
-        return this._date;
-    }
+    date = () => this._date;
 
     /** @returns {number} */
-    value() {
-        return this._value;
-    }
+    value = () => this._value;
 
     /** @returns {string} */
-    tooltip() {
-        return this._tooltip;
-    }
+    tooltip = () => this._tooltip;
 }
 
 export {TimelineDataPoint}
