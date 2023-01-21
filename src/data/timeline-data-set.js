@@ -1,7 +1,7 @@
-import {Arrays, DateCreator, Month} from "@oncody/objects";
+import {Arrays, DateCreator, Month, CalendarDate} from "@oncody/objects";
 import {TimelineDataPoint} from "./timeline-data-point.js";
 
-const STARTING_YEAR = 2018;
+const STARTING_YEAR = 2023;
 
 class TimelineDataSet {
     /** @param {string} name
@@ -21,9 +21,10 @@ class TimelineDataSet {
             .filter(dataPoint => dataPoint.date().year() >= STARTING_YEAR)
             .sort((a, b) => a.date().differenceInDays(b.date()));
 
-        let max = Arrays.max(normalizedPoints.map(dataPoint => dataPoint.value()));
-        normalizedPoints = normalizedPoints.map(dataPoint => new TimelineDataPoint(dataPoint.date(), ((dataPoint.value() * 1.0) / max)));
+        // let max = Arrays.max(normalizedPoints.map(dataPoint => dataPoint.value()));
+        // normalizedPoints = normalizedPoints.map(dataPoint => new TimelineDataPoint(dataPoint.date(), ((dataPoint.value() * 1.0) / max)));
 
+        /** @type {CalendarDate[]} */
         let allDates = [];
         let startDate = DateCreator.date(Month.JANUARY, 1, STARTING_YEAR);
         let endDate = DateCreator.now();
@@ -31,17 +32,31 @@ class TimelineDataSet {
             allDates.push(dateCursor);
         }
 
-        console.log(allDates);
+        /** @type {TimelineDataPoint[]} */
+        let completeTimelineDataPoints = [];
+        let cursor = 0;
+        let lastValue = 0.0;
+        for(let date of allDates) {
+            if(cursor >= normalizedPoints.length) {
+                completeTimelineDataPoints.push(new TimelineDataPoint(date, lastValue));
+                continue;
+            }
 
-        /** This will keep track of which element in the normalized points we are currently iterating on */
-        // let dataPointsCursor = 0;
+            let existingDataPoint = normalizedPoints[cursor];
+            if(date.differenceInDays(existingDataPoint.date()) < 0) {
+                completeTimelineDataPoints.push(new TimelineDataPoint(date, lastValue));
+                continue;
+            }
 
-        // let lastValue = 0.0;
-            // let existingDataPoint = normalizedPoints[dataPointsCursor];
-            // if(dateCursor.differenceInDays(existingDataPoint.date()) < 0) {
-            //     new TimelineDataPoint()
-            // }
-        return normalizedPoints;
+            if(date.differenceInDays(existingDataPoint.date()) === 0) {
+                lastValue = existingDataPoint.value();
+                completeTimelineDataPoints.push(existingDataPoint);
+                cursor++;
+                continue;
+            }
+        }
+
+        return completeTimelineDataPoints;
     }
 
     /** @param {number} value

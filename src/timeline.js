@@ -38,7 +38,7 @@ class Timeline {
             let color = this._colors.nextColor();
             return {
                 label: dataSet.name(),
-                data: dataSet.dataPoints().map(dataPoint => dataPoint.value()),
+                data: dataSet.dataPoints().map(dataPoint => dataSet.valuePercent(dataPoint.value())),
                 pointRadius: 0,
                 borderWidth: 1,
                 backgroundColor: color,
