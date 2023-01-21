@@ -67,8 +67,6 @@ class TimelineDataSet {
             }
         }
 
-        console.log(completeTimelineDataPoints);
-
         return completeTimelineDataPoints;
     }
 
