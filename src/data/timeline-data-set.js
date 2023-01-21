@@ -24,14 +24,23 @@ class TimelineDataSet {
         let max = Arrays.max(normalizedPoints.map(dataPoint => dataPoint.value()));
         normalizedPoints = normalizedPoints.map(dataPoint => new TimelineDataPoint(dataPoint.date(), ((dataPoint.value() * 1.0) / max)));
 
-        // let startingDate = DateCreator.date(Month.JANUARY, 1, STARTING_YEAR);
-        // let endDate = DateCreator.now();
-        // let dateCursor = startingDate;
-        // let lastValue = 0;
-        // let lastTooltip = '';
-        // while (dateCursor.differenceInDays(endDate) <= 0) {
+        let allDates = [];
+        let startDate = DateCreator.date(Month.JANUARY, 1, STARTING_YEAR);
+        let endDate = DateCreator.now();
+        for (let dateCursor = startDate; dateCursor.differenceInDays(endDate) <= 0; dateCursor = dateCursor.addDays(1)) {
+            allDates.push(dateCursor);
+        }
 
-        // }
+        console.log(allDates);
+
+        /** This will keep track of which element in the normalized points we are currently iterating on */
+        // let dataPointsCursor = 0;
+
+        // let lastValue = 0.0;
+            // let existingDataPoint = normalizedPoints[dataPointsCursor];
+            // if(dateCursor.differenceInDays(existingDataPoint.date()) < 0) {
+            //     new TimelineDataPoint()
+            // }
         return normalizedPoints;
     }
 
