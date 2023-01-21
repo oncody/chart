@@ -38,13 +38,13 @@ class Timeline {
             return {
                 label: dataSet.name(),
                 data: dataSet.dataPoints().map(dataPoint => dataPoint.value()),
-                lineTension: 0.8,
-                tension: 0.8,
                 pointRadius: 0,
                 borderWidth: 1,
-                cubicInterpolationMode: 'monotone',
                 backgroundColor: color,
                 borderColor: color,
+                // lineTension: 0.8,
+                // tension: 0.8,
+                // cubicInterpolationMode: 'monotone',
             };
         });
     }
