@@ -1,7 +1,7 @@
 import {Arrays, DateCreator, Month, CalendarDate} from "@oncody/objects";
 import {TimelineDataPoint} from "./timeline-data-point.js";
 
-const STARTING_YEAR = 2023;
+const STARTING_YEAR = 2018;
 
 class TimelineDataSet {
     /** @param {string} name
