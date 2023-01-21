@@ -75,7 +75,7 @@ class Timeline {
             let dataSet = this._dataSets.find(dataSet => dataSet.name() === label);
             let dataPoint = dataSet.dataPoint(index);
             let name = dataSet.name();
-            let valuePercent = Numbers.roundFloat(dataSet.valuePercent(dataPoint.value()), 2);
+            let valuePercent = Numbers.roundFloat((100.0 * dataSet.valuePercent(dataPoint.value())), 0);
             let value = Numbers.roundFloat(dataPoint.value(), 2);
             return `${name}:   ${valuePercent}%    $${value}`
         }

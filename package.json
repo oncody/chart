@@ -1,6 +1,6 @@
 {
   "name": "@oncody/chart",
-  "version": "1.0.37",
+  "version": "1.0.38",
   "description": "js chart",
   "main": "index.js",
   "type": "module",
