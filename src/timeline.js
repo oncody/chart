@@ -60,26 +60,10 @@ class Timeline {
         /** @param {[]} charts
          * @return {string} */
         let tooltipTitleCallback = (charts) => {
-            if(!charts || !charts.length) {
-                return '';
-            }
-
             let firstChart = charts[0];
-            if(!firstChart) {
-                return '';
-            }
-
             let index = firstChart.dataIndex;
-            if(!this._dataSets || !this._dataSets.length) {
-                return '';
-            }
-
             let dataSet = this._dataSets[0];
             let dataPoint = dataSet.dataPoint(index);
-            if(!dataPoint) {
-                return '';
-            }
-
             return dataPoint.date().longHumanString();
         };
 
